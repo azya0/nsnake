@@ -1,7 +1,7 @@
 from enum import IntEnum
 from random import randint
 
-from src.utils import Vector2D, MoveDirection, Node
+from utils import Vector2D, MoveDirection, Node
 
 from .Snake import Snake, SnakeBodyCollision
 
@@ -47,7 +47,7 @@ class Board:
             if self._apple_position not in already_selected:
                 break
     
-    def is_running(self) -> None:
+    def is_running(self) -> bool:
         return self._status == BoardStatus.RUNNING
 
     def get_status(self) -> BoardStatus:

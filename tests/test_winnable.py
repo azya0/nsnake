@@ -3,8 +3,8 @@ import logging
 
 import pytest
 
-from src.SnakeGame.Board import Board, BoardStatus
-from src.utils import MoveDirection
+from SnakeGame.Board import Board, BoardStatus
+from utils import MoveDirection
 
 
 logger = logging.getLogger(__name__)

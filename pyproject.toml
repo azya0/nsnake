@@ -1,10 +1,20 @@
 [project]
 name = "nsnake"
 version = "0.1.0"
-description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
+    "numpy>=2.5.0",
     "pygame-ce>=2.5.7",
+    "torch>=2.12.1",
+    "tqdm>=4.68.3",
+]
+
+[dependency-groups]
+dev = [
+    "jupyterlab>=4.6.0",
     "pytest>=9.1.1",
 ]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]

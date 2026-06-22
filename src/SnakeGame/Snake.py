@@ -1,4 +1,4 @@
-from src.utils import Vector2D, MoveDirection, Node
+from utils import Vector2D, MoveDirection, Node
 
 
 class SnakeBodyCollision(BaseException):
