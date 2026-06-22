@@ -1,8 +1,19 @@
+from enum import IntEnum
 from random import randint
 
-from utils import Vector2D, MoveDirection, Node
+from src.utils import Vector2D, MoveDirection, Node
 
-from .Snake import Snake
+from .Snake import Snake, SnakeBodyCollision
+
+
+class BoardStatus(IntEnum):
+    RUNNING = 0,
+    LOSE = 1,
+    WIN = 2,
+
+
+class BoardException(BaseException):
+    pass
 
 
 class Board:
@@ -10,6 +21,7 @@ class Board:
         self._apple_position: Vector2D = Vector2D(0, 0)
         self._size: Vector2D = Vector2D(width, height)
         self._snake = Snake(self._size // 2)
+        self._status = BoardStatus.RUNNING
 
         self.generate_apple()
 
@@ -21,6 +33,10 @@ class Board:
         while head is not None:
             already_selected.add(head.data)
             head = head.prev
+        
+        if len(already_selected) == self._size.x * self._size.y:
+            self._status = BoardStatus.WIN
+            return
 
         while True:
             self._apple_position = Vector2D(
@@ -30,14 +46,36 @@ class Board:
 
             if self._apple_position not in already_selected:
                 break
+    
+    def is_running(self) -> None:
+        return self._status == BoardStatus.RUNNING
+
+    def get_status(self) -> BoardStatus:
+        return self._status
 
     def get_size(self) -> Vector2D:
         return self._size
 
-    def move(self, direction: MoveDirection) -> None:
-        self._snake.move(direction)
+    def is_inner(self, head_position: Vector2D) -> bool:
+        return Vector2D(0, 0) <= head_position <= self._size - 1
 
-        if self._snake.get_head().data != self._apple_position:
+    def move(self, direction: MoveDirection) -> None:
+        if not self.is_running():
+            raise BoardException
+        
+        try:
+            self._snake.move(direction)
+        except SnakeBodyCollision:
+            self._status = BoardStatus.LOSE
+            return
+
+        head_position = self._snake.get_head().data
+        
+        if not self.is_inner(head_position):
+            self._status = BoardStatus.LOSE
+            return
+
+        if head_position != self._apple_position:
             self._snake.remove_tail()
             return
 

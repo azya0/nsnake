@@ -12,3 +12,4 @@ wheels/
 # Dev
 .mypy_cache
 .ruff_cache
+.vscode

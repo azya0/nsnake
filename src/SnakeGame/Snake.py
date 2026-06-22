@@ -1,4 +1,8 @@
-from utils import Vector2D, MoveDirection, Node
+from src.utils import Vector2D, MoveDirection, Node
+
+
+class SnakeBodyCollision(BaseException):
+    pass
 
 
 class Snake:
@@ -8,19 +12,31 @@ class Snake:
 
         self.tail.next = self.head
 
+        self.body: set[Vector2D] = set()
+        self.body.add(self.head.data)
+
     def _update_position(self, direction_vector: Vector2D) -> None:
-        new_head: Node[Vector2D] = Node[Vector2D](self.head.data + direction_vector)
+        new_head_position: Vector2D = self.head.data + direction_vector
+
+        if new_head_position in self.body:
+            raise SnakeBodyCollision
+
+        new_head: Node[Vector2D] = Node[Vector2D](new_head_position)
 
         new_head.prev = self.head
         self.head.next = new_head
 
         self.head = new_head
 
+        self.body.add(new_head.data)
+
     def get_head(self) -> Node[Vector2D]:
         return self.head
 
     def remove_tail(self) -> None:
         assert self.tail.next is not None
+        
+        self.body.remove(self.tail.data)
 
         self.tail = self.tail.next
         self.tail.prev = None

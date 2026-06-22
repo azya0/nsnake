@@ -63,7 +63,7 @@ class SnakeGameApp:
         pygame.init()
         clock = pygame.time.Clock()
 
-        while self._run:
+        while (self._run and self.board.is_running()):
             for event in pygame.event.get():
                 self.event_processor(event)
 

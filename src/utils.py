@@ -19,6 +19,15 @@ class Vector2D:
     def __add__(self, other: Vector2D) -> Vector2D:
         return Vector2D(self.x + other.x, self.y + other.y)
 
+    def __sub__(self, other: int) -> Vector2D:
+        return Vector2D(self.x - other, self.y - other)
+    
+    def __le__(self, other: Vector2D) -> bool:
+        return self.x <= other.x and self.y <= other.y
+
+    def __ge__(self, other: Vector2D) -> bool:
+        return self.x >= other.x and self.y >= other.y
+
 
 @dataclass
 class Node[T]:
