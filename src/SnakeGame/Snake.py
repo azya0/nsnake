@@ -7,13 +7,16 @@ class SnakeBodyCollision(BaseException):
 
 class Snake:
     def __init__(self, position: Vector2D) -> None:
-        self.head: Node[Vector2D] = Node[Vector2D](position)
+        self.head: Node[Vector2D] = Node[Vector2D](position + Vector2D(0, -2))
         self.tail: Node[Vector2D] = self.head
 
         self.tail.next = self.head
 
         self.body: set[Vector2D] = set()
         self.body.add(self.head.data)
+
+        self.move(MoveDirection.Top)
+        self.move(MoveDirection.Top)
 
     def _update_position(self, direction_vector: Vector2D) -> None:
         new_head_position: Vector2D = self.head.data + direction_vector

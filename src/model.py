@@ -49,10 +49,8 @@ def get_state_from_board(board: Board) -> torch.Tensor:
         
         result[new_coords] = 1.0
     
-    if (new_coords := get_new_coords((apple_position := board.get_apple()))) is None:
-        return result
-    
-    result[new_coords] = 2.0
+    if (new_coords := get_new_coords((apple_position := board.get_apple()))) is not None:
+        result[new_coords] = 2.0
 
     apple_range: int = abs(result_center.x - apple_position.x) + abs(result_center.y - apple_position.y)
 
