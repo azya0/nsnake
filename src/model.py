@@ -6,11 +6,11 @@ from utils import Vector2D
 
 
 class SnakeSolver(nn.Module):
-    def __init__(self, square_side_size: int = 5) -> None:
+    def __init__(self, square_side_size: int = 5, addition_params: int = 1) -> None:
         super().__init__()
         
         self.data = nn.Sequential(
-            nn.Linear(square_side_size * square_side_size, 128),
+            nn.Linear(square_side_size * square_side_size + addition_params, 128),
             nn.ReLU(),
             nn.Linear(128, 128),
             nn.ReLU(),
@@ -49,12 +49,14 @@ def get_state_from_board(board: Board) -> torch.Tensor:
         
         result[new_coords] = 1.0
     
-    if (new_coords := get_new_coords(board.get_apple())) is None:
+    if (new_coords := get_new_coords((apple_position := board.get_apple()))) is None:
         return result
     
     result[new_coords] = 2.0
 
-    return result
+    apple_range: int = abs(result_center.x - apple_position.x) + abs(result_center.y - apple_position.y)
+
+    return torch.cat((result.flatten(), torch.tensor([apple_range])))
 
 
 def select_model_action(model: SnakeSolver, state: Tensor, dim: int = 0) -> int:
