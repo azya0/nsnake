@@ -60,4 +60,4 @@ def get_state_from_board(board: Board) -> torch.Tensor:
 def select_model_action(model: SnakeSolver, state: Tensor, dim: int = 0) -> int:
     with torch.no_grad():
         result: torch.Tensor = model(state)
-        return int(result.argmax(dim=dim).item())
+        return int(result.cpu().argmax(dim=dim).item())
