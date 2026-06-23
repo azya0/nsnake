@@ -34,23 +34,23 @@ def get_state_from_board(board: Board) -> torch.Tensor:
     
     snake = board.get_snake()
     result_center = snake[0]
-    result[2, 2] = 1.0
+    result[2, 2] = -10.0
 
     for result_index_x, x_add in enumerate(range(-2, 3)):
         for result_index_y, y_add in enumerate(range(-2, 3)):
             if board_x > result_center.x + x_add >= 0 and board_y > result_center.y + y_add >= 0:
                 continue
 
-            result[result_index_x, result_index_y] = -1.0
+            result[result_index_x, result_index_y] = -10.0
 
     for snake_part in snake[1:]:
         if (new_coords := get_new_coords(snake_part)) is None:
             continue
         
-        result[new_coords] = 1.0
+        result[new_coords] = -10.0
     
     if (new_coords := get_new_coords((apple_position := board.get_apple()))) is not None:
-        result[new_coords] = 2.0
+        result[new_coords] = 10.0
 
     apple_range: int = abs(result_center.x - apple_position.x) + abs(result_center.y - apple_position.y)
 
