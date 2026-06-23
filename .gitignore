@@ -14,3 +14,7 @@ wheels/
 .ruff_cache
 .vscode
 .pytest_cache
+
+# artefacts
+models/*
+!__init__.py

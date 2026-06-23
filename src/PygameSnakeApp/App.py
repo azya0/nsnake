@@ -1,22 +1,26 @@
+from abc import ABC, abstractmethod
+
 from typing import Protocol, cast
 
 import pygame
 
 from SnakeGame.Board import Board
-from utils import MoveDirection, Vector2D
+from utils import Vector2D
 
 
 class KeyboardEvent(Protocol):
     key: int
 
 
-class SnakeGameApp:
+class SnakeGameApp(ABC):
     def __init__(self, width: int, height: int, cells_x: int, cells_y: int) -> None:
+        self.cells_x = cells_x
+        self.cells_y = cells_y
         self.board = Board(cells_x, cells_y)
 
         self._rect_size = Vector2D(width // cells_x, height // cells_y)
 
-        self.fps: int = 120
+        self.fps: int = 10
         self._run: bool = True
 
         self.screen = pygame.display.set_mode((width, height))
@@ -41,16 +45,13 @@ class SnakeGameApp:
 
         pygame.display.flip()
 
+    @abstractmethod
     def process_keydown(self, event: KeyboardEvent) -> None:
-        match event.key:
-            case pygame.K_a:
-                self.board.move(MoveDirection.Left)
-            case pygame.K_d:
-                self.board.move(MoveDirection.Right)
-            case pygame.K_w:
-                self.board.move(MoveDirection.Top)
-            case pygame.K_s:
-                self.board.move(MoveDirection.Down)
+        pass
+    
+    @abstractmethod
+    def do(self) -> None:
+        pass
 
     def event_processor(self, event: pygame.Event) -> None:
         match event.type:
@@ -67,6 +68,7 @@ class SnakeGameApp:
             for event in pygame.event.get():
                 self.event_processor(event)
 
+            self.do()
             self.render()
 
             clock.tick(self.fps)

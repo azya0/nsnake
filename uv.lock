@@ -917,6 +917,7 @@ name = "nsnake"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
+    { name = "ipykernel" },
     { name = "numpy" },
     { name = "pygame-ce" },
     { name = "torch" },
@@ -931,6 +932,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "ipykernel", specifier = ">=7.3.0" },
     { name = "numpy", specifier = ">=2.5.0" },
     { name = "pygame-ce", specifier = ">=2.5.7" },
     { name = "torch", specifier = ">=2.12.1" },
