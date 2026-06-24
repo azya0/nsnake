@@ -14,13 +14,14 @@ class SnakeGamePlayByNN(SnakeGameApp):
 
         self.model = SnakeSolver(5)
         self.model.load_state_dict(torch.load(model_path))
+        self.previous_apple_range: int | None = None
     
     def process_keydown(self, event) -> None:
         if event.key == pygame.K_r:
             self.board = Board(self.cells_x, self.cells_y)
     
     def do(self) -> None:
-        state = get_state_from_board(self.board).flatten()
+        state, self.previous_apple_range = get_state_from_board(self.board, self.previous_apple_range)
 
         action = select_model_action(self.model, state)
 

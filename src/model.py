@@ -6,7 +6,7 @@ from utils import Vector2D
 
 
 class SnakeSolver(nn.Module):
-    def __init__(self, square_side_size: int = 5, addition_params: int = 1) -> None:
+    def __init__(self, square_side_size: int = 5, addition_params: int = 2) -> None:
         super().__init__()
         
         self.data = nn.Sequential(
@@ -21,7 +21,7 @@ class SnakeSolver(nn.Module):
         return self.data(input)
 
 
-def get_state_from_board(board: Board) -> torch.Tensor:
+def get_state_from_board(board: Board, previous_apple_range: int | None = None) -> tuple[torch.Tensor, int]:
     def get_new_coords(current: Vector2D) -> tuple[int, int] | None:
         if abs(new_x := (current.x - result_center.x)) > 2 or abs(new_y := (current.y - result_center.y)) > 2:
             return None
@@ -54,7 +54,7 @@ def get_state_from_board(board: Board) -> torch.Tensor:
 
     apple_range: int = abs(result_center.x - apple_position.x) + abs(result_center.y - apple_position.y)
 
-    return torch.cat((result.flatten(), torch.tensor([apple_range])))
+    return torch.cat((result.flatten(), torch.tensor([previous_apple_range if previous_apple_range is not None else -1.0]), torch.tensor([apple_range]))), apple_range
 
 
 def select_model_action(model: SnakeSolver, state: Tensor, dim: int = 0) -> int:
